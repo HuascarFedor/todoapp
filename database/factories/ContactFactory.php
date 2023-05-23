@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +19,8 @@ class ContactFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
-            'phone' => $this->faker->regexify('\591(6|7)[0-9]{7}')
+            'phone' => $this->faker->regexify('\591(6|7)[0-9]{7}'),
+            'user_id' => User::all()->random()->id,
         ];
     }
 }
