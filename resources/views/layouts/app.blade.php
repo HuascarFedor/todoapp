@@ -33,6 +33,9 @@
         <main>
             {{ $slot }}
         </main>
+
+        <!-- Flash Message -->
+        @include('layouts.flash')
     </div>
 </body>
 

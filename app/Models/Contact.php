@@ -8,4 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Contact extends Model
 {
     use HasFactory;
+
+    protected $fillable = ['name', 'phone'];
+
+    protected static function boot()
+    {
+        parent::boot();
+        self::creating(function ($table) {
+            if (!app()->runningInConsole()) {
+                $table->user_id = auth()->id();
+            }
+        });
+    }
 }

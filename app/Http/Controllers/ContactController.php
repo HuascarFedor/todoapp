@@ -12,7 +12,7 @@ class ContactController extends Controller
      */
     public function index()
     {
-        $contacts = Contact::paginate(3);
+        $contacts = Contact::where("user_id", auth()->id())->orderByDesc('id')->paginate(3);
         return view('contacts.index', compact('contacts'));
     }
 
@@ -21,7 +21,7 @@ class ContactController extends Controller
      */
     public function create()
     {
-        //
+        return view('contacts.create');
     }
 
     /**
@@ -29,7 +29,16 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|min:2|max:100',
+            'phone' => 'required|min:8|max:12',
+        ]);
+        $contact = Contact::create([
+            'name' => $request->name,
+            'phone' => $request->phone,
+        ]);
+        $contact->save();
+        return redirect()->route('contacts.index')->with('success', 'Stored with success');
     }
 
     /**
