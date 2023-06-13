@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex justify-between">
             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                {{ __('Contact create') }}
+                {{ __('Contact edit') }}
             </h2>
             <a href="{{ route('contacts.index') }}" class="bg-green-300 py-2 px-4 rounded">
                 {{ __('Contacts') }}

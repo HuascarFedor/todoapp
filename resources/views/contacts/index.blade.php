@@ -18,6 +18,9 @@
                         @if ($contacts->count())
                             @foreach ($contacts as $contact)
                                 <div class="bg-gray-200 p-4 rounded">
+                                    <div class="flex justify-center">
+                                        <img class="w-32 h-32 rounded-full" src="{{ $contact->getUrl() }}">
+                                    </div>
                                     <div>
                                         {{ $contact->name }}
                                     </div>
@@ -25,10 +28,14 @@
                                         {{ $contact->phone }}
                                     </div>
                                     <div class="my-4 flex justify-between">
-                                        <a href="#" class="bg-orange-400 rounded px-4 py-2">
-                                            {{ __('Update') }}
+                                        <a href="{{ route('contacts.edit', ['contact' => $contact]) }}"
+                                            class="bg-orange-400 rounded px-4 py-2">
+                                            {{ __('Edit') }}
                                         </a>
-                                        <form action="" method="post">
+                                        <form action="{{ route('contacts.destroy', ['contact' => $contact]) }}"
+                                            method="post">
+                                            @csrf
+                                            @method('DELETE')
                                             <button type="submit" class="bg-red-400 rounded px-4 py-2">
                                                 {{ __('Delete') }}
                                             </button>

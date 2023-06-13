@@ -21,7 +21,10 @@ class ContactController extends Controller
      */
     public function create()
     {
-        return view('contacts.create');
+        $title = 'Contact create';
+        $route = route('contacts.store');
+        $button = 'Register';
+        return view('contacts.create', compact('title', 'route', 'button'));
     }
 
     /**
@@ -32,10 +35,15 @@ class ContactController extends Controller
         $request->validate([
             'name' => 'required|min:2|max:100',
             'phone' => 'required|min:8|max:12',
+            'image' => 'image|mimes:jpeg,jpg,png,gif,svg,webp'
         ]);
+        $path = "public/contacts/no_image.png";
+        if ($request->hasFile('image'))
+            $path = $request->image->store('public/contacts');
         $contact = Contact::create([
             'name' => $request->name,
             'phone' => $request->phone,
+            'path' => $path,
         ]);
         $contact->save();
         return redirect()->route('contacts.index')->with('success', 'Stored with success');
@@ -54,7 +62,10 @@ class ContactController extends Controller
      */
     public function edit(Contact $contact)
     {
-        //
+        $title = 'Contact edit';
+        $route = route('contacts.update', ['contact' => $contact]);
+        $button = 'Update';
+        return view('contacts.edit', compact('title', 'route', 'button', 'contact'));
     }
 
     /**
@@ -62,7 +73,23 @@ class ContactController extends Controller
      */
     public function update(Request $request, Contact $contact)
     {
-        //
+        $request->validate([
+            'name' => 'required|min:2|max:100',
+            'phone' => 'required|min:8|max:12',
+            'image' => 'image|mimes:jpeg,jpg,png,gif,svg,webp'
+        ]);
+        $path = $contact->path;
+        if ($request->hasFile('image')) {
+            $contact->deleteImage();
+            $path = $request->image->store('public/contacts');
+        }
+        $contact->fill([
+            'name' => $request->name,
+            'phone' => $request->phone,
+            'path' => $path,
+        ]);
+        $contact->save();
+        return redirect()->route('contacts.index')->with('success', 'Edited with success');
     }
 
     /**
@@ -70,6 +97,8 @@ class ContactController extends Controller
      */
     public function destroy(Contact $contact)
     {
-        //
+        $contact->delete();
+        $contact->deleteImage();
+        return redirect()->route('contacts.index')->with('success', 'Deleted with success');
     }
 }
